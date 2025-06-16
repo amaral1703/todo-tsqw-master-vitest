@@ -98,7 +98,7 @@ it('Cenario 1 {Tarefa 1 Id valido} Editar Retorna Sucesso', async () => {
 // DADO: Endpoint de atualização da tarefa. 
 // QUANDO: PUT/PATCH com novo nome. 
 // ENTÃO: A tarefa é atualizada no banco e refletida no front-end. 
-//Caso 1: Entrada = "título":  {"Tarefa 1", “id” = '10'}
+//Caso 1: Entrada = "título":  {"Tarefa 1", “id” = '10'} id invalido
 it('Cenario 2 {Tarefa 1 Id Invalido} Editar Retorna Erro',  async () => {
     const toggle = vi.fn()
     const onDelete = vi.fn()
@@ -135,10 +135,6 @@ it('Cenario 2 {Tarefa 1 Id Invalido} Editar Retorna Erro',  async () => {
     // Então a função de salvar é chamada com o ID e o novo título
     expect(onSaveEdit).toThrowErrorMatchingSnapshot;
   })
-
-
-
-
 
   it('História de Usuário: Cancelar edição - Como usuário, se eu começar a editar uma tarefa, quero poder cancelar a edição e ver o título original novamente.', async () => {
     const toggle = vi.fn()
@@ -195,8 +191,9 @@ it('Cenario 2 {Tarefa 1 Id Invalido} Editar Retorna Erro',  async () => {
     // Então a função de exclusão é chamada com o ID da tarefa
     expect(onDelete).toHaveBeenCalledWith(id)
   })
-
-  it('História de Usuário: Impedir título vazio - Como usuário, ao tentar salvar uma tarefa editada com um título vazio, quero ver uma mensagem de erro e a tarefa não deve ser salva.', async () => {
+// QUANDO: Tento adicionar uma tarefa com nome vazio. 
+// ENTÃO: Vejo erro informando que o nome é inválido. 
+  it('Cenario 1 titulo vazio {titulo: ""} Adicionar Retorna erro', async () => {
     const toggle = vi.fn()
     const onDelete = vi.fn()
     const onSaveEdit = vi.fn()
