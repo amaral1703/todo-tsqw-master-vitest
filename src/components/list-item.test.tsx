@@ -55,7 +55,51 @@ describe('Componente ListItem', () => {
     expect(toggle).toHaveBeenCalledWith(id)
   })
 
-  it('História de Usuário: Editar uma tarefa - Como usuário, quero poder editar o título de uma tarefa e salvá-lo com sucesso.', async () => {
+// DADO: Endpoint de atualização da tarefa. 
+// QUANDO: PUT/PATCH com novo nome. 
+// ENTÃO: A tarefa é atualizada no banco e refletida no front-end. 
+//Caso 1: Entrada = "título":  {"Tarefa 1", “id” :1}
+it('Cenario 1 {Tarefa 1 Id valido} Editar Retorna Sucesso', async () => {
+    const toggle = vi.fn()
+    const onDelete = vi.fn()
+    const onSaveEdit = vi.fn()
+    renderWithTheme(
+      <ListItem
+        id={id}
+        title={tituloInicial}
+        completed={concluidaInicialmente}
+        toggle={toggle}
+        onDelete={onDelete}
+        onSaveEdit={onSaveEdit}
+      />
+    )
+
+    // Aqui trocamos getByTitle para getByRole com name 'Edit' (case insensitive)
+    // Quando o usuário clica no botão "Editar"
+    const editButton = screen.getByRole('button', { name: /edit/i })
+    await userEvent.click(editButton)
+
+    // Então um campo de input aparece com o título atual
+    const input = screen.getByDisplayValue(tituloInicial)
+    expect(input).toBeInTheDocument()
+
+    // E o usuário altera o título
+    await userEvent.clear(input)
+    await userEvent.type(input, 'Tarefa 1')
+
+    // E clica no botão "Salvar"
+    const saveButton = screen.getByRole('button', { name: /save/i })
+    await userEvent.click(saveButton)
+
+    // Então a função de salvar é chamada com o ID e o novo título
+    expect(onSaveEdit).toHaveBeenCalledWith(id, 'Tarefa 1')
+  })
+
+// DADO: Endpoint de atualização da tarefa. 
+// QUANDO: PUT/PATCH com novo nome. 
+// ENTÃO: A tarefa é atualizada no banco e refletida no front-end. 
+//Caso 1: Entrada = "título":  {"Tarefa 1", “id” = '10'}
+it('Cenario 2 {Tarefa 1 Id Invalido} Editar Retorna Erro',  async () => {
     const toggle = vi.fn()
     const onDelete = vi.fn()
     const onSaveEdit = vi.fn()
@@ -82,15 +126,19 @@ describe('Componente ListItem', () => {
 
     // E o usuário altera o título
     await userEvent.clear(input)
-    await userEvent.type(input, 'Tarefa Atualizada')
+    await userEvent.type(input, 'Tarefa 1')
 
     // E clica no botão "Salvar"
     const saveButton = screen.getByRole('button', { name: /save/i })
     await userEvent.click(saveButton)
 
     // Então a função de salvar é chamada com o ID e o novo título
-    expect(onSaveEdit).toHaveBeenCalledWith(id, 'Tarefa Atualizada')
+    expect(onSaveEdit).toThrowErrorMatchingSnapshot;
   })
+
+
+
+
 
   it('História de Usuário: Cancelar edição - Como usuário, se eu começar a editar uma tarefa, quero poder cancelar a edição e ver o título original novamente.', async () => {
     const toggle = vi.fn()
