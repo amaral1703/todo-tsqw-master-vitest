@@ -31,6 +31,7 @@ export default function TodoForm({ submit, change, text }) {
             type="submit"
             startIcon={<FaPlus/>} 
             className="mt-2"
+            placeholder = "Add Todo"
           >
             Add Todo
           </Button>

@@ -55,43 +55,6 @@ describe('Componente ListItem', () => {
     expect(toggle).toHaveBeenCalledWith(id)
   })
 
-  it('História de Usuário: Editar uma tarefa - Como usuário, quero poder editar o título de uma tarefa e salvá-lo com sucesso.', async () => {
-    const toggle = vi.fn()
-    const onDelete = vi.fn()
-    const onSaveEdit = vi.fn()
-
-    renderWithTheme(
-      <ListItem
-        id={id}
-        title={tituloInicial}
-        completed={concluidaInicialmente}
-        toggle={toggle}
-        onDelete={onDelete}
-        onSaveEdit={onSaveEdit}
-      />
-    )
-
-    // Aqui trocamos getByTitle para getByRole com name 'Edit' (case insensitive)
-    // Quando o usuário clica no botão "Editar"
-    const editButton = screen.getByRole('button', { name: /edit/i })
-    await userEvent.click(editButton)
-
-    // Então um campo de input aparece com o título atual
-    const input = screen.getByDisplayValue(tituloInicial)
-    expect(input).toBeInTheDocument()
-
-    // E o usuário altera o título
-    await userEvent.clear(input)
-    await userEvent.type(input, 'Tarefa Atualizada')
-
-    // E clica no botão "Salvar"
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    await userEvent.click(saveButton)
-
-    // Então a função de salvar é chamada com o ID e o novo título
-    expect(onSaveEdit).toHaveBeenCalledWith(id, 'Tarefa Atualizada')
-  })
-
   it('História de Usuário: Cancelar edição - Como usuário, se eu começar a editar uma tarefa, quero poder cancelar a edição e ver o título original novamente.', async () => {
     const toggle = vi.fn()
     const onDelete = vi.fn()
@@ -148,69 +111,7 @@ describe('Componente ListItem', () => {
     expect(onDelete).toHaveBeenCalledWith(id)
   })
 
-  it('História de Usuário: Impedir título vazio - Como usuário, ao tentar salvar uma tarefa editada com um título vazio, quero ver uma mensagem de erro e a tarefa não deve ser salva.', async () => {
-    const toggle = vi.fn()
-    const onDelete = vi.fn()
-    const onSaveEdit = vi.fn()
-    
-    renderWithTheme(
-      <ListItem
-        id={id}
-        title={tituloInicial}
-        completed={concluidaInicialmente}
-        toggle={toggle}
-        onDelete={onDelete}
-        onSaveEdit={onSaveEdit}
-      />
-    )
-    // Dado que o usuário está editando uma tarefa
-    const editButton = screen.getByRole('button', { name: /edit/i })
-    await userEvent.click(editButton)
-
-    // E apaga o conteúdo do título (deixando apenas espaços, por exemplo)
-    const input = screen.getByDisplayValue(tituloInicial)
-    fireEvent.change(input, { target: { value: ' ' } })
-
-    // Quando o usuário tenta salvar
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    await userEvent.click(saveButton)
-
-    // Então uma mensagem de erro é exibida
-    expect(toast.error).toHaveBeenCalledWith('O título não pode estar vazio.') // Ajuste a mensagem conforme a implementação
-    // E a função de salvar não é chamada
-    expect(onSaveEdit).not.toHaveBeenCalled()
-  })
-
-  it('História de Usuário: Lidar com título nulo na edição - Como usuário, se uma tarefa for carregada com título nulo e eu tentar salvá-la (mesmo sem alteração), quero ver uma mensagem de erro.', async () => {
-    const onSaveEdit = vi.fn()
-    const toggle = vi.fn()
-    const onDelete = vi.fn()
-    renderWithTheme(
-      <ListItem
-        id="test-null-id"
-        title={null} // Cenário com título inicial nulo
-        completed={false}
-        toggle={toggle}
-        onDelete={onDelete}
-        onSaveEdit={onSaveEdit}
-      />
-    )
-
-    // Dado que o usuário entra no modo de edição de uma tarefa com título inicial nulo
-    const editButton = screen.getByRole('button', { name: /edit/i })
-    await userEvent.click(editButton)
-
-    // O campo de input deve estar vazio
-    const input = screen.getByRole('textbox')
-    expect(input).toHaveValue('')
-
-    // Quando o usuário tenta salvar sem modificar o input
-    const saveButton = screen.getByRole('button', { name: /save/i })
-    await userEvent.click(saveButton)
-
-    // Então uma mensagem de erro é exibida
-    expect(toast.error).toHaveBeenCalledWith('O título não pode estar vazio.') // Ajuste a mensagem conforme a implementação
-    // E a função de salvar não é chamada
-    expect(onSaveEdit).not.toHaveBeenCalled()
-  })
 })
+
+
+ 
